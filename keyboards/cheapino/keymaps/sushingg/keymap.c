@@ -4,6 +4,11 @@
 #include "rgb.c"
 
 // Shortcut to make keymap more readable
+enum custom_keycodes {
+    OBJECT_OPERATOR = SAFE_RANGE,
+    DB_ARROW_OPERATOR,
+    VSCODE_FORMAT
+};
 
 #define L_NAV   LT(1,KC_SPC)
 #define L_MOU   LT(2,KC_TAB)
@@ -33,9 +38,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MOU] = LAYOUT_split_3x5_3(
     //  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   /***/   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-          QK_BOOT, KC_NO,   KC_NO,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   
-          KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_NO,     /***/   KC_NO,   KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, 
-          KC_NO,   KC_RALT, KC_NO,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, 
+          QK_BOOT, KC_NO,   VSCODE_FORMAT,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   
+          KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_NO,     /***/   OBJECT_OPERATOR,   KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, 
+          KC_NO,   KC_RALT, KC_NO,   KC_NO,   KC_NO,     /***/   DB_ARROW_OPERATOR,   KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, 
                                    KC_NO,   KC_NO,   KC_NO,     /***/   KC_BTN2, KC_BTN1, KC_BTN3
     ),
 
@@ -117,6 +122,24 @@ const uint16_t flow_config[FLOW_COUNT][2] = {
 // Add following to handle flow
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case OBJECT_OPERATOR:
+            if (record->event.pressed) {
+                SEND_STRING("->!");
+            }
+            break;
+    
+        case DB_ARROW_OPERATOR:
+            if (record->event.pressed) {
+                SEND_STRING("=>");
+            }
+            break;
+        case VSCODE_FORMAT:
+            if (record->event.pressed) {
+                register_code16(LSA(KC_F));
+            }
+            break;
+    }
     if (!update_flow(keycode, record->event.pressed, record->event.key)) return false;
     return true;
 }
@@ -162,30 +185,30 @@ bool encoder_turned_user(bool clockwise) {
     return true;
 }
 
-enum combo_events {
-    OBJECT_OPERATOR,
-    DB_ARROW_OPERATOR,
-};
+// enum combo_events {
+//     OBJECT_OPERATOR,
+//     DB_ARROW_OPERATOR,
+// };
 
-const uint16_t PROGMEM combo_key_1[] = {L_MED, KC_M, COMBO_END};
-const uint16_t PROGMEM combo_key_2[] = {L_MED, KC_K, COMBO_END};
+// const uint16_t PROGMEM combo_key_1[] = {L_MED, KC_M, COMBO_END};
+// const uint16_t PROGMEM combo_key_2[] = {L_MED, KC_K, COMBO_END};
 
-combo_t key_combos[] = {
-    [OBJECT_OPERATOR] = COMBO_ACTION(combo_key_1),
-    [DB_ARROW_OPERATOR] = COMBO_ACTION(combo_key_2),
-};
+// combo_t key_combos[] = {
+//     [OBJECT_OPERATOR] = COMBO_ACTION(combo_key_1),
+//     [DB_ARROW_OPERATOR] = COMBO_ACTION(combo_key_2),
+// };
 
-void process_combo_event(uint16_t combo_index, bool pressed) {
-    switch(combo_index) {
-      case OBJECT_OPERATOR:
-        if (pressed) {
-          SEND_STRING("->");
-        }
-        break;
-      case DB_ARROW_OPERATOR:
-        if (pressed) {
-            SEND_STRING("=>");
-        }
-        break;
-    }
-  }
+// void process_combo_event(uint16_t combo_index, bool pressed) {
+//     switch(combo_index) {
+//       case OBJECT_OPERATOR:
+//         if (pressed) {
+//           SEND_STRING("->");
+//         }
+//         break;
+//       case DB_ARROW_OPERATOR:
+//         if (pressed) {
+//             SEND_STRING("=>");
+//         }
+//         break;
+//     }
+//   }
