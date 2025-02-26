@@ -7,7 +7,8 @@
 enum custom_keycodes {
     OBJECT_OPERATOR = SAFE_RANGE,
     DB_ARROW_OPERATOR,
-    VSCODE_FORMAT
+    VSCODE_FORMAT,
+    CHANGE_LANG
 };
 
 #define L_NAV   LT(1,KC_SPC)
@@ -38,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MOU] = LAYOUT_split_3x5_3(
     //  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   /***/   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-          QK_BOOT, KC_NO,   KC_NO,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   
+          CHANGE_LANG, KC_NO,   KC_NO,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   
           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_NO,     /***/   KC_NO,   KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, 
           KC_NO,   KC_RALT, KC_NO,   KC_NO,   KC_NO,     /***/   KC_NO,   KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, 
                                    KC_NO,   KC_NO,   KC_NO,     /***/   KC_BTN2, KC_BTN1, KC_BTN3
@@ -137,6 +138,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case VSCODE_FORMAT:
             if (record->event.pressed) {
                 tap_code16(LSA(KC_F));
+            }
+            break;
+        case CHANGE_LANG:
+            if (record->event.pressed) {
+                tap_code16(LSFT(KC_LALT));
             }
             break;
     }
